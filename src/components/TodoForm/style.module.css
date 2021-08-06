@@ -1,0 +1,28 @@
+.todo-form {
+    margin: auto;
+    margin-top: 2%;
+    text-align: center;
+}
+
+.todo-form input {
+    padding-left: 5px;
+    height: 25px;
+    border-radius: 5px;
+    border: 1px solid lightgray;
+    margin-right: 5px;
+}
+  
+.todo-form input:focus {
+    border: 1px solid darkgray;
+}
+  
+.todo-form button {
+    height: 29px;
+    border-radius: 5px;
+    border: 1px solid lightgray;
+    
+}
+
+.todo-form button:focus {
+    background-color: #00a799;
+}

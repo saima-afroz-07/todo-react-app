@@ -1,5 +1,30 @@
-.edit {
+/* .edit {
     color: darkgreen;
-}
+} */
 
 /* {style["edit-form"]} */
+
+.edit-btn, .delete-btn {
+    background-color: transparent;
+    border: none !important;
+    color: white;
+}
+
+.each-todo {
+    margin: 4% auto;
+    display: flex;
+    align-items: center;
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: #17566c;
+    color: #fff;
+    justify-content: space-evenly;
+    width: 187px;
+}
+
+.each-todo p {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

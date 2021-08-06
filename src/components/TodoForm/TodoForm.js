@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { nanoid } from 'nanoid'
 import Input from '../Inputs/Input';
 import Button from '../Buttons/Button';
+import style from './style.module.css'
 
 function TodoForm(props) {
     const [input, setInput] = useState(props.edit ? props.edit.text : '');
@@ -24,22 +25,18 @@ function TodoForm(props) {
 
     return (
         <>
-            <form className="todo-form" onSubmit={handleSubmit}>
+            <form className={style['todo-form']} onSubmit={handleSubmit}>
                 {props.edit ? (
                 <>
                 <div>
-                    {/* <input type="text" placeholder="Edit to do" value={input} onChange={handleChange} ></input> */}
                     <Input placeholder={'Edit to do'} value={input} onChange={handleChange}/>
-                    {/* <button >Update</button> */}
                     <Button children="Update"/>
                 </div>
                     
                 </>
                 ) : (
                 <>
-                    {/* <input type="text" placeholder="Add a ToDo" value={input} onChange={handleChange}></input> */}
                     <Input placeholder={'Add a ToDo'} value={input} onChange={handleChange}/>
-                    {/* <button>Add</button> */}
                     <Button children="Add"/>
                 </>
                 )
