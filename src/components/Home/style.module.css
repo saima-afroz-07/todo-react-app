@@ -1,0 +1,10 @@
+.container {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .container h1 {
+    letter-spacing: 10px; 
+    text-align: center;
+  }

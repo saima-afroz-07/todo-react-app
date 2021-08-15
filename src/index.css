@@ -6,11 +6,6 @@ body {
   background-color: #d3fffb;
 }
 
-/* code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-} */
-
 .container {
   display: grid;
   align-items: center;
@@ -19,64 +14,7 @@ body {
 
 .container h1 {
   letter-spacing: 10px; 
-}
-
-/* .todo-form {
-  margin: auto;
-}
-.todo-form input {
-  padding-left: 5px;
-  height: 25px;
-  border-radius: 5px;
-  border: 1px solid lightgray;
-  margin-right: 5px;
-}
-
-.todo-form input:focus {
-  border: 1px solid darkgray;
-}
-
-.todo-form button {
-  height: 29px;
-  border-radius: 5px;
-  border: 1px solid lightgray;
-  
-} */
-
-/* .edit-btn, .delete-btn {
-  background-color: transparent;
-  border: none !important;
-  color: white;
-} */
-
-/* .todo-form button:focus {
-  background-color: #00a799;
-} */
-/* .each-todo {
-  margin-top: 4%;
-  display: flex;
-  align-items: center;
-  border: none;
-  border-radius: 5px;
-  padding: 5px;
-  background-color: #17566c;
-  color: #fff;
-  justify-content: space-evenly;
-  width: 187px;
-} */
-
-/* .todo-form {
-  margin-top: 2%;
   text-align: center;
-} */
+}
 
-.todo-description {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-.each-todo p {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
+

@@ -1,14 +1,11 @@
 import './App.css';
-import TodoList from './components/TodoList';
+import Home from './components/Home/Home';
 
 function App() {
   return (
-    <div className="container">
-      <h1>TO DO LIST</h1>
-      <div className="todo-form">
-        <TodoList />
-      </div>
-    </div>
+    <>
+    <Home />
+    </>
   );
 }
 

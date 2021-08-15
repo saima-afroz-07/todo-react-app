@@ -4,7 +4,7 @@
 
 /* {style["edit-form"]} */
 
-.edit-btn, .delete-btn {
+.edit-btn, .delete-btn, .nav-btn {
     background-color: transparent;
     border: none !important;
     color: white;
@@ -20,11 +20,23 @@
     background-color: #17566c;
     color: #fff;
     justify-content: space-evenly;
-    width: 187px;
+    width: 88%;
 }
 
 .each-todo p {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    cursor: pointer;
+}
+
+.strike-text {
+    text-decoration: line-through;
+}
+
+.priority-btn {
+    border-radius: 5px;
+    border: none;
+    padding: 4px;
+    background-color: aliceblue;
 }
