@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Todo from '../Todo';
 import TodoForm from '../TodoForm';
-import {databaseRef} from '../Config/Config';
+import {databaseRef} from '../../Config/Config';
 
 
 function TodoList(props) {
     const [list, setList] = useState([]);
     const [priority, setPriority] = useState('all');
     const [editableItem, setEditableItem] = useState(null);
+    console.log(process.env.REACT_APP_FIREBASE_API_KEY);
 
     const addTodoList = (todo) => {
         
@@ -17,16 +18,19 @@ function TodoList(props) {
            const newTodo = [...list, todo];
            setList(newTodo);
            localStorage.setItem('todo-list', JSON.stringify(newTodo));
+
+           databaseRef.collection('todos').doc(todo.id).set(todo);
         }
 
-        databaseRef.child('todos').push(
-            todo, 
-            err => {
-                if(err){
-                    console.log(err)
-                } 
-            }
-        )
+        // databaseRef.child('todos').push(
+        //     todo, 
+        //     err => {
+        //         if(err){
+        //             console.log(err)
+        //         } 
+        //     }
+        // )
+        
         
     } 
 
@@ -38,6 +42,9 @@ function TodoList(props) {
                 each_list.isComplete = item.isComplete;
                 each_list.priority = item.priority;
                 setEditableItem(item);
+                databaseRef.collection('todos').doc(item.id).update({
+                    todo: item
+                });
             }
             return each_list
         })
@@ -46,16 +53,17 @@ function TodoList(props) {
         console.log(item.id, text, filteredList);
         setList(filteredList);
         localStorage.setItem('todo-list', JSON.stringify(filteredList));
+        
     }
 
-    const editTodo = (id, item) => {
-        console.log(id);
-        let filteredList = list.map((each_list) => { 
-            return each_list.id === id ? item: each_list
-        })
-        setList(filteredList);
-        localStorage.setItem('todo-list', JSON.stringify(filteredList));
-    }
+    // const editTodo = (id, item) => {
+    //     console.log(id);
+    //     let filteredList = list.map((each_list) => { 
+    //         return each_list.id === id ? item: each_list
+    //     })
+    //     setList(filteredList);
+    //     localStorage.setItem('todo-list', JSON.stringify(filteredList));
+    // }
 
     
 
@@ -64,10 +72,14 @@ function TodoList(props) {
         console.log(deleteTodo);
         localStorage.setItem('todo-list', JSON.stringify(deleteTodo));
         setList(deleteTodo);
+
+        databaseRef.collection('todos').doc(id).delete();
+        
     }
 
     useEffect(() => {
         const savedList = JSON.parse(localStorage.getItem('todo-list'));
+
         if(savedList){
             setList(savedList);
             // console.log('if condition', savedList);
@@ -81,18 +93,28 @@ function TodoList(props) {
         let updatedTodos = list.map(item => {
             if(item.id === id){
                 item.isComplete = !item.isComplete
+
+                databaseRef.collection('todos').doc(id).update({
+                    todo: item
+                });
             }
             return item
         })
 
         setList(updatedTodos);
         localStorage.setItem('todo-list', JSON.stringify(updatedTodos));
+
+        
     }
 
     const changePriority = (id, priority) => {
         let updatedTodos = list.map(item => {
             if(item.id === id){
                 item.priority = priority;
+
+                databaseRef.collection('todos').doc(id).update({
+                    todo: item
+                });
             }
             return item
         })
@@ -139,7 +161,7 @@ function TodoList(props) {
         <div>
             <TodoForm setPriority={setPriority} priority={priority} filteredPriority={filteredPriority} onSubmit={addTodoList}/>
              
-            <Todo onUpdate={onUpdate} editableItem={editableItem} setEditableItem={setEditableItem} onDragEnd={onDragEnd} priority={priority}  changePriority={changePriority} completeTodo={completeTodo} list={filteredList} deleteTodo={deleteTodo} editTodo={editTodo}/>
+            <Todo onUpdate={onUpdate} editableItem={editableItem} setEditableItem={setEditableItem} onDragEnd={onDragEnd} priority={priority}  changePriority={changePriority} completeTodo={completeTodo} list={filteredList} deleteTodo={deleteTodo}/>
         </div>
     );
 }
