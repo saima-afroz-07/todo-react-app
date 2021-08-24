@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 import { Form, Button, Card, Alert } from 'react-bootstrap';
 import {useAuth} from '../Contexts/AuthContext';
 import { Link, useHistory } from "react-router-dom"
-import Login from '../Login/Login';
 
 
 function Signup(props) {
@@ -18,10 +17,10 @@ function Signup(props) {
     async function handleSubmit(e) {
         e.preventDefault();
         if(passwordRef.current.value !== passwordConfirmRef.current.value){
-            return setError('Password do not match')
+            return setError('Password do not match');
         } 
 
-        debugger;
+        // debugger;
         try {
             setError('');
             setLoading(true);

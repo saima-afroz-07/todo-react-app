@@ -11,10 +11,6 @@ function Login(props) {
     const [loading, setLoading] = useState(false);
     const history = useHistory();
 
-    // useEffect(() => {
-    //     currentUser && history.push("/todo");
-    //   }, [currentUser]);
-
     async function handleSubmit(e) {
         e.preventDefault();
 
@@ -22,12 +18,19 @@ function Login(props) {
             setError('');
             setLoading(true);
             await login(emailRef.current.value, passwordRef.current.value);
-            history.push('/todo');
+            console.log(emailRef.current.value, passwordRef.current.value);
+            history.push("/todo");
         } catch {
             setError('Failed to create an account');
         }
         setLoading(false)
     }
+
+    // useEffect(() => {
+    //     if(currentUser){
+    //         history.push("/todo");
+    //     }
+    // }, [currentUser])
 
     
     return (

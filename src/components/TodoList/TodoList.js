@@ -88,7 +88,7 @@ function TodoList(props) {
         // } else {
         //     console.log('no')
         // }
-
+        // const dataFromLC = JSON.parse(localStorage.getItem('user'));
         const response = databaseRef.collection('todos').doc(currentUser?.uid).collection('userTodo');
         const data = await response.get().then((list) => {
             list.forEach(item => {
@@ -110,7 +110,7 @@ function TodoList(props) {
         // const savedList = JSON.parse(localStorage.getItem('todo-list'));
         fetchTodos();
        
-    }, [])
+    }, [currentUser])
 
     const completeTodo = (id) => {
         let updatedTodos = list.map(item => {
@@ -201,7 +201,7 @@ function TodoList(props) {
 
         <div>
             <h1>TO DO LIST</h1>
-            <p>{  currentUser?.email}</p>
+            <p>{currentUser?.email}</p>
             <Link to="/login"><Button onClick={handleLogout} className={style["logout-btn"]} variant="link" children="Logout"></Button></Link>
             
             <TodoForm setPriority={setPriority} priority={priority} filteredPriority={filteredPriority} onSubmit={addTodoList}/>
