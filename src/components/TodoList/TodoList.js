@@ -6,6 +6,8 @@ import { Button } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import { useAuth } from '../Contexts/AuthContext';
 import style from './style.module.css';
+import setupRootStore from '../../models/Setup';
+import {observer} from 'mobx-react-lite'
 
 
 function TodoList(props) {
@@ -16,35 +18,40 @@ function TodoList(props) {
     const {currentUser, logout} = useAuth();
     const [error, setError] = useState(false);
     const history = useHistory();
-    console.log(list);
+    const {rootTree} = setupRootStore();
+    // const todos = rootTree.todos
+    // console.log(rootTree.todos);
 
     const addTodoList = (todo) => {
         
         if(todo.text === ''){
             alert('Please Fill the tect field')
         } else {
-           const newTodo = [...list, todo];
-           setList(newTodo);
-        //    localStorage.setItem('todo-list', JSON.stringify(newTodo));
+        //    const newTodo = [...list, todo];
+           
+        //    setList(rootTree.todos);
            databaseRef.collection('todos').doc(currentUser?.uid).collection('userTodo').doc(todo.id).set(todo).then(() => {
+                rootTree.addNewTodo(todo);
                 console.log('Succesfully Data Added');
             }).catch((err) =>{
                 console.log('Error in adding data ', err);
             })
         }
     } 
-
+    //parameters - text, id
+    //find method with id to get the todo from list
     // onUpdate function
     const onUpdate = (text, item)  => {
-        let filteredList = list.map((each_list) => { 
+        debugger
+        let filteredList = rootTree.todos.map((each_list) => { 
             if(item.id === each_list.id){
-                each_list.text = text;
-                // each_list.isComplete = item.isComplete;
-                // each_list.priority = item.priority;
+                // each_list.text = text;
                 setEditableItem(item);
+
                 databaseRef.collection('todos').doc(currentUser?.uid).collection('userTodo').doc(item.id).update({
-                    text: item.text
+                    text: text
                 }).then(() => {
+                    item.onUpdate(text)
                     console.log('Succesfully Data Updated')
                 }).catch((err) =>{
                     console.log('Error in updating data ', err)
@@ -55,62 +62,53 @@ function TodoList(props) {
         
         
         console.log(item.id, text, filteredList);
-        setList(filteredList);
-        // localStorage.setItem('todo-list', JSON.stringify(filteredList));
+        // setList(filteredList);
         
     }
 
     const deleteTodo = (id) => {
-        const deleteTodo = list.filter(todo => todo.id !== id)
-        console.log(deleteTodo);
-        // localStorage.setItem('todo-list', JSON.stringify(deleteTodo));
-        setList(deleteTodo);
+        // const deleteTodo = rootTree.todos.filter(todo => todo.id !== id)
+        // console.log(deleteTodo);
+        // setList(deleteTodo);
+        let updatedTodos = rootTree.todos.map(item => {
+            if(item.id === id){
+                item.deleteTodo();
 
-        databaseRef.collection('todos').doc(currentUser?.uid).collection('userTodo').doc(id).delete().then(() => {
-            console.log('Succesfully Data Deleted')
-        }).catch((err) =>{
-            console.log('Error in deleting data ', err)
+                databaseRef.collection('todos').doc(currentUser?.uid).collection('userTodo').doc(id).delete().then(() => {
+                    console.log('Succesfully Data Deleted')
+                }).catch((err) =>{
+                    console.log('Error in deleting data ', err)
+                })
+            }
+            return item
         })
+
+
+        
         
     }
 
     const fetchTodos =  async () => {
 
-        // databaseRef.collection('todos').get().then(querySnapshot => {
-        //     querySnapshot.forEach(doc => {
-        //       savedList.push(doc.data())
-        //     })
-        // }).catch(err => console.log(err))
-        // console.log(savedList)
-        // if(savedList){
-        //     setList(savedList);
-        //     console.log('yes', savedList)
-        // } else {
-        //     console.log('no')
-        // }
-        // const dataFromLC = JSON.parse(localStorage.getItem('user'));
         const response = databaseRef.collection('todos').doc(currentUser?.uid).collection('userTodo');
         const data = await response.get().then((list) => {
             list.forEach(item => {
                 savedList.push(item.data())
             })
+            rootTree.setTodos(savedList);
             }).catch((err) => {
                 console.log('Error in getting data ', err)
             })
-
-        // data.docs.forEach(item=>{
-        //     // console.log(item.data());
-        //     savedList.push(item.data())
-        // })
-
-        setList(savedList);
+        // setList(rootTree.todos);
+        
+        console.log(savedList, rootTree.todos);
     }
 
     useEffect(() => {
-        // const savedList = JSON.parse(localStorage.getItem('todo-list'));
         fetchTodos();
        
-    }, [currentUser])
+    }, [currentUser, rootTree]);
+
 
     const completeTodo = (id) => {
         let updatedTodos = list.map(item => {
@@ -129,18 +127,18 @@ function TodoList(props) {
         })
 
         setList(updatedTodos);
-        // localStorage.setItem('todo-list', JSON.stringify(updatedTodos));
         
     }
 
     const changePriority = (id, priority) => {
-        let updatedTodos = list.map(item => {
+        let updatedTodos = rootTree.todos.map(item => {
             if(item.id === id){
-                item.priority = priority;
+                // item.priority = priority;
                 console.log(priority);
                 databaseRef.collection('todos').doc(currentUser?.uid).collection('userTodo').doc(id).update({
                     priority: priority
                 }).then(() => {
+                    item.onChangePriority(priority)
                     console.log('Succesfully Data Updated')
                 }).catch((err) =>{
                     console.log('Error in updating data ', err);
@@ -149,7 +147,6 @@ function TodoList(props) {
             return item
         })
         setList(updatedTodos);
-        // localStorage.setItem('todo-list', JSON.stringify(updatedTodos));
     }
 
     const filteredPriority = (e) => {
@@ -206,9 +203,9 @@ function TodoList(props) {
             
             <TodoForm setPriority={setPriority} priority={priority} filteredPriority={filteredPriority} onSubmit={addTodoList}/>
              
-            <Todo onUpdate={onUpdate} editableItem={editableItem} setEditableItem={setEditableItem} onDragEnd={onDragEnd} priority={priority}  changePriority={changePriority} completeTodo={completeTodo} list={filteredList} deleteTodo={deleteTodo}/>
+            <Todo onUpdate={onUpdate} editableItem={editableItem} setEditableItem={setEditableItem} onDragEnd={onDragEnd} priority={priority}  changePriority={changePriority} completeTodo={completeTodo} list={rootTree} deleteTodo={deleteTodo}/>
         </div>
     );
 }
 
-export default TodoList;
+export default observer(TodoList);

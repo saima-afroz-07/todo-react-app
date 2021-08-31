@@ -4,8 +4,9 @@ import Input from '../Input';
 import Button from '../Button';
 import style from './style.module.css'
 import { FormControl, MenuItem, Select } from '@material-ui/core';
+import { observer } from 'mobx-react-lite';
 
-function TodoForm({edit, list, onSubmit, filteredPriority, priority, setPriority, onUpdate}) {
+function TodoForm({edit, onSubmit, filteredPriority, priority, setPriority, onUpdate}) {
     const [input, setInput] = useState(edit ? edit.text : '');
     const inputPlaceholder = edit ? 'Edit to Do' : 'Add To Do';
     const buttonText = edit ? 'Update' : 'Add';
@@ -59,9 +60,9 @@ function TodoForm({edit, list, onSubmit, filteredPriority, priority, setPriority
                     </FormControl>): <></>}
                 </div>
             </form>
-            <div>{list}</div>
+            {/* <div>{list}</div> */}
         </>
     );
 }
 
-export default TodoForm;
+export default observer(TodoForm);

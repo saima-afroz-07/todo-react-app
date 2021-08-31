@@ -6,7 +6,7 @@ import { useAuth } from '../Contexts/AuthContext';
 function PrivateRouter({component: Component, ...rest}) {
     const tempUser = JSON.parse(localStorage.getItem('user'));
     const {currentUser} = useAuth();
-    console.log(currentUser);
+    // console.log(currentUser);
     return (
         <Route
             {...rest}

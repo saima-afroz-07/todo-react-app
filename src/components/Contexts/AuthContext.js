@@ -1,7 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { auth } from '../../Config/Config';
+// import setupRootStore from '../../models/Setup';
 
 const AuthContext = React.createContext();
+// const {rootStore} = setupRootStore(); 
 
 export function useAuth(){
     return useContext(AuthContext)
@@ -10,7 +12,7 @@ export function useAuth(){
 export function AuthProvider({children}) {
     const [currentUser, setCurrentUser] = useState();
     const [loading, setLoading] = useState(false);
-    console.log(currentUser)
+    // console.log(currentUser)
 
     function signup(email, password) {
         return auth.createUserWithEmailAndPassword(email, password);

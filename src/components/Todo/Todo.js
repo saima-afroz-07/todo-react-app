@@ -9,21 +9,22 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { FormControl } from '@material-ui/core';
 import {DragDropContext , Droppable, Draggable } from 'react-beautiful-dnd';
 import { Link} from 'react-router-dom'
+import { observer } from 'mobx-react-lite';
 
 
 
 function Todo({list, deleteTodo, editTodo, completeTodo, changePriority, onDragEnd, setEditableItem, editableItem, onUpdate}) {
 
     //here i will recieve the prop and pass in todoform as prop
-
     const handleChange = (e, item) => {
-        item.priority = e.target.value;
-        changePriority(item.id, item.priority);
+        const priority = e.target.value;
+        changePriority(item.id, priority);
         console.log(e.target.value, item.priority);
     }
 
     const getUpdateForm = (id) => {
-        const updateTodoItem = list.find(item =>  item.id === id);
+        const updateTodoItem = list.todos.find(item =>  item.id === id);
+        console.log(list.todos)
         return <TodoForm onUpdate={onUpdate} edit={updateTodoItem}/>
     }
 
@@ -32,7 +33,7 @@ function Todo({list, deleteTodo, editTodo, completeTodo, changePriority, onDragE
             <>
             
             <div>
-                {list.map((item) => {
+                {list.todos.map((item) => {
                 return <div key={item.id}>
                 {
                 editableItem === item.id && !item.isComplete ? (getUpdateForm(item.id)
@@ -62,7 +63,7 @@ function Todo({list, deleteTodo, editTodo, completeTodo, changePriority, onDragE
                 <Droppable droppableId='lists'>
                     {(provided) => (
                         <div {...provided.droppableProps} ref={provided.innerRef}>
-                            {list.map((item, index) => {
+                            {list.todos.map((item, index) => {
 
                                 return (
                                     <Draggable key={item.id} draggableId={item.id} index={index}>
@@ -101,4 +102,4 @@ function Todo({list, deleteTodo, editTodo, completeTodo, changePriority, onDragE
         )
 }
 
-export default Todo;
+export default observer(Todo);
